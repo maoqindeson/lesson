@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.generator.dao.ExerciseDao">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.generator.entity.ExerciseEntity" id="exerciseMap">
+        <result property="id" column="id"/>
+        <result property="orgId" column="org_id"/>
+        <result property="intervalTime" column="interval_time"/>
+        <result property="type" column="type"/>
+        <result property="content" column="content"/>
+        <result property="deletedAt" column="deleted_at"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="getOldList" resultType="io.renren.modules.generator.entity.ExerciseEntity">
+    SELECT
+    a.content as exercise_result,
+    tb_exercise.*
+    FROM
+    (
+    SELECT
+    *
+    FROM
+    tb_user_exercise
+    WHERE
+    username = #{username}
+    ) a
+    LEFT JOIN tb_exercise ON a.exercise_id = tb_exercise.id
+    </select>
+</mapper>

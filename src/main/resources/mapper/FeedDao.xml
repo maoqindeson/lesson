@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.generator.dao.FeedDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.generator.entity.FeedEntity" id="feedMap">
+        <result property="id" column="id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="orgId" column="org_id"/>
+        <result property="nextOrg" column="next_org"/>
+        <result property="loadType" column="load_type"/>
+        <result property="type" column="type"/>
+        <result property="pointTo" column="point_to"/>
+        <result property="hasStart" column="has_start"/>
+        <result property="hasEnd" column="has_end"/>
+        <result property="hasExercise" column="has_exercise"/>
+        <result property="content" column="content"/>
+        <result property="choices" column="choices"/>
+        <result property="correctResult" column="correct_result"/>
+        <result property="poster" column="poster"/>
+        <result property="name" column="name"/>
+        <result property="author" column="author"/>
+        <result property="src" column="src"/>
+        <result property="text" column="text"/>
+        <result property="answer" column="answer"/>
+        <result property="intervalTime" column="interval_time"/>
+        <result property="deletedAt" column="deleted_at"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="nextFeed" column="next_feed"/>
+        <result property="startNode" column="start_node"/>
+        <result property="hasEnd" column="has_end"/>
+    </resultMap>
+
+    <select id="getAllFeedByOrgId" resultMap="feedMap">
+        SELECT * from tb_feed where activity=1 and org_id = #{orgId};
+    </select>
+    <select id="getFirstFeedByOrgId" resultMap="feedMap">
+        SELECT * from tb_feed where org_id = #{orgId} and has_start = 1 ;
+    </select>
+    <select id="listByPage" resultMap="feedMap" parameterType="io.renren.modules.generator.form.SearchForm">
+        SELECT * from tb_feed where org_id = #{orgId} order by id ASC LIMIT #{offset}, #{pageSize};
+    </select>
+    <select id="listByPageAndId" resultMap="feedMap">
+        SELECT * from tb_feed where  id >= #{id} order by id ASC LIMIT #{pageSize};
+    </select>
+    <select id="listByPageAfterId" resultMap="feedMap">
+        SELECT * from tb_feed where  id > #{id} order by id ASC LIMIT #{pageSize};
+    </select>
+    <select id="listByParentAndId" resultMap="feedMap">
+        SELECT * from tb_feed where  id >= #{id} and parent_id = #{parentId} order by id ASC LIMIT #{pageSize};
+    </select>
+    <select id="listByParentAfterId" resultMap="feedMap">
+        SELECT * from tb_feed where  id > #{id} and parent_id = #{parentId} order by id ASC LIMIT #{pageSize};
+    </select>
+    <select id="getOldList" resultType="io.renren.modules.generator.entity.FeedEntity">
+SELECT
+	a.feed_result,
+	tb_feed.*
+FROM
+	(
+		SELECT
+			*
+		FROM
+			tb_user_feed
+		WHERE
+			username = #{username}
+	) a
+LEFT JOIN tb_feed ON a.feed_id = tb_feed.id
+    </select>
+    <select id="getOldListByOrgId" resultType="io.renren.modules.generator.entity.FeedEntity">
+SELECT
+	a.feed_result,
+	tb_feed.*
+FROM
+	(
+		SELECT
+			*
+		FROM
+			tb_user_feed
+		WHERE
+			username = #{username} and org_id = #{orgId}
+	) a
+LEFT JOIN tb_feed ON a.feed_id = tb_feed.id
+    </select>
+
+    <select id="countFeedsByOrgIds" resultType="java.lang.Integer" parameterType="java.util.List">
+        select count(1) from tb_feed
+        where org_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectPage" resultMap="feedMap">
+        select *
+        from  tb_feed
+    </select>
+    <select id="getLastFeedIdByOrgIds" resultType="java.lang.Integer" parameterType="java.util.List">
+        select id from tb_feed where org_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ORDER BY id desc limit 1
+    </select>
+</mapper>

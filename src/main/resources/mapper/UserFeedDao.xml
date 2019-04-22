@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.generator.dao.UserFeedDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.generator.entity.UserFeedEntity" id="userFeedMap">
+        <result property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="feedId" column="feed_id"/>
+        <result property="orgId" column="org_id"/>
+        <result property="feedResult" column="feed_result"/>
+        <result property="deletedAt" column="deleted_at"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="getLastRecord" resultMap="userFeedMap">
+        SELECT * from tb_user_feed where username = #{username} order by id desc limit 1
+    </select>
+    <select id="getOldRecordList" resultMap="userFeedMap">
+        SELECT * from tb_user_feed where username = #{username}
+    </select>
+    <select id="countFeedsByOrgIds" resultType="java.lang.Integer" parameterType="java.util.List">
+        select count(1) from tb_user_feed
+        where username = #{username} and org_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

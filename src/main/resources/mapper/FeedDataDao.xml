@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.generator.dao.FeedDataDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.generator.entity.FeedDataEntity" id="feedDataMap">
+        <result property="id" column="id"/>
+        <result property="feedId" column="feed_id"/>
+        <result property="choices" column="choices"/>
+        <result property="audioPoster" column="audio_poster"/>
+        <result property="audioName" column="audio_name"/>
+        <result property="audioAuthor" column="audio_author"/>
+        <result property="audioSrc" column="audio_src"/>
+        <result property="deletedAt" column="deleted_at"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="getAllFeedData" resultMap="feedDataMap">
+        SELECT * from tb_feed_data  ;
+    </select>
+</mapper>
